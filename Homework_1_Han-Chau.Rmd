@@ -1,0 +1,345 @@
+---
+title: "HW1_MA541"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+  word_document: default
+date: ""
+---
+# Han Chau - 20012654
+
+## Question 1:
+a) Let $Y_i$ be a sample of filled bottles is randomly selected from the out put of the machine on a given day. (i = 1,2,...,9)
+We have: $\sigma^2=1$, $\mu_{\bar{Y}}=\mu$ and n = 9
+$$\sigma_{\bar{Y}}=\frac{\sigma}{\sqrt{n}}=\frac{\sqrt{1}}{\sqrt{9}}=\frac{1}{3}$$
+\begin{align*}
+\mathrm{P}(|\bar{Y}-\mu| \le 0.3) & = \mathrm{P}(-0.3 \le \bar{Y}-\mu \le 0.3)\\
+&=\mathrm{P}\left(-0.9 \le \frac{\bar{Y}-\mu}{\sigma_{\bar{Y}}} \le 0.9\right)\\
+&=\theta({0.9})-\theta({-0.9})\\
+&=2\theta({0.9})-1\\
+&=2 * 0.8159 - 1 = 0.6318
+\end{align*}
+
+b) We have P = 0.95:
+
+\begin{align*}
+\mathrm{P}(|\bar{Y}-\mu|\le 0.3) &=0.95\\
+\mathrm{P}\left(\frac{-0.3}{\sigma_{\bar{Y}}}\le\frac{\bar{Y}-\mu}{\sigma_{\bar{Y}}}\le\frac{0.3}{\sigma_{\bar{Y}}}\right)&=0.95\\
+2*\theta\left({\frac{0.3}{\sigma_{\bar{Y}}}}\right)-1 &= 0.95\\
+\theta\left(\frac{-0.3}{\sigma_{\bar{Y}}}\right) &= 0.95\\
+\frac{0.3}{\sigma_{\bar{Y}}} &= 1.96\\
+\sigma_{\bar{Y}} &= \frac{0.3}{1.96}\\
+\end{align*}
+
+
+We also have: $\sigma_{\bar{Y}}=\frac{\sigma}{\sqrt{n}}$
+Therefore, $$n=\frac{1}{\left(\frac{0.3}{1.96}\right)^2} \approx 42.68$$
+
+c) 
+- We see: in the a) n = 9 and P=0.6318, but in the b) P = 0.95 and n = 43.
+- Hence, if the values of n increase, the variance of sample mean will decrease and the probability will increase. (If the sample size n is small relative to the population size N)
+
+## Question 2:
+- We have a population: 1, 2, 2, 4, and 8; so N = 5.
+- A sample size: n = 2.
+- The possible number of cases is $\frac{5!}{3!2!}=10$ cases.
+- The proportion of the sample values that are greater than 3 ($\hat{p}$).
+
+
+Sample values |proportion of sample values that greater than 3 ($\hat{p}$)
+--------------|-----------------------------------------------------------
+1 - 2         |0         
+1 - 2         |0 
+1 - 4         |0.5
+1 - 8         |0.5
+2 - 2         |0
+2 - 2         |0
+2 - 4         |0.5
+2 - 8         |0.5
+2 - 4         |0.5
+2 - 8         |0.5
+4 - 8         |1
+
+==> The sampling distribution of $\hat{p}$ is:
+
+$\hat{p}$    |   0.  |   0.5   |    1
+-------------|-------|---------|---------
+probability  |$\frac{3}{10}$|$\frac{6}{10}$|$\frac{1}{10}$
+
+```{r,echo=FALSE}
+p_hat = c("0","0.5","1")
+probability = c(3/10,6/10,1/10)
+barplot(probability,xlab = "p_hat", ylab = "probability",names.arg = c("0","0.5","1"), horiz = FALSE)
+```
+
+- The mean and variance of the sampling distribution are:
+
+$$E(\hat{p})=0*\frac{3}{10}+\frac{1}{2}*\frac{6}{10}+1*\frac{1}{10}=0.4$$
+$$E(\hat{p}^2)=0^2*\frac{3}{10}+\left(\frac{1}{2}\right)^2*\frac{6}{10}+1^2*\frac{1}{10}=0.25$$
+$$Var(\hat{p})=E(\hat{p}^2)-[E(\hat{p})]^2=0.25-(0.4)^2=0.09$$
+
+## Question 3:
+- The hazard function: $$h(t)=\frac{f(t)}{1-F(t)}=-\frac{d}{dt}log[1-F(t)]=-\frac{d}{dt}logS(t)$$
+- The cumulative hazard function is: 
+\begin{align*}
+H(t) &= \int_{0}^{t} f(s) \; ds\\
+&= -logS(t)\\
+==> S(t) &= e^{-H(t)} & (1)\\
+\end{align*}
+- Beside that: $$S(t)=1-F(t)$$ 
+
+\begin{align*}
+==> S(t)&=\frac{f(t)}{h(t)}  & (2)\\
+\end{align*}
+
+from (1), (2): $$\frac{f(t)}{h(t)}=e^{-H(t)}=e^{-\int_{0}^{t} f(s) \; ds}$$
+==>$$f(t)=h(t)*e^{-\int_{0}^{t} f(s) \; ds}$$
+==> Therefore, we can conclude that the hazard function uniquely determines the density.
+
+
+
+## Question 5:
+
+```{r}
+iridium = c(136.6,145.2,151.5, 162.7,159.1, 159.8, 160.8, 173.9, 160.1, 160.4, 
+            161.1, 160.6 ,160.2, 159.5, 160.3, 159.2, 159.3, 159.6, 160.0,160.2,
+            160.1, 160.0, 159.7, 159.5, 159.5, 159.6, 159.5)
+rhodium = c(126.4, 135.7, 132.9, 131.5, 131.1, 131.1, 131.9, 132.7, 133.3, 132.5,
+            133.0, 133.0, 132.4, 131.6, 132.6, 132.2, 131.3, 131.2, 132.1, 131.1,
+            131.4, 131.2, 131.1, 131.1, 134.2, 133.8, 133.3, 133.5, 133.4, 133.5,
+            133.0, 132.8, 132.6, 133.3, 133.5, 133.5, 132.3, 132.7, 132.9, 134.1)
+```
+
+a)  
+
+-   make a histogram for each table
+
+```{r}
+iri_hist = hist(iridium, xlab = "Temperature", 
+                main = "Histogram for the frequence of the heat of Iridium", 
+                breaks=500, col="red")
+
+rho_hist = hist(rhodium, xlab = "Temperature", 
+                main = "Histogram for the frequence of the heat of Rhodium", 
+                breaks=100, col="blue")
+
+```
+
+
+
+```{r, echo=FALSE}
+iri_hist = hist(iridium, xlab = "Temperature", main = "Histogram for The heat of the sublimation of Iridium", breaks=500, col="blue", prob = TRUE)
+lines(density(iridium), col = "red")
+
+```
+
+
+```{r, echo=FALSE}
+
+rho_hist = hist(rhodium, xlab = "Temperature", main = "Histogram for The heat of the sublimation of Rhodium", breaks=100, col="blue", prob = TRUE)
+lines(density(rhodium), col = "red")
+```
+
+```{r,echo=FALSE}
+#iri_hist = hist(iridium, xlab = "Temperature", 
+#                main = "Histogram for The heat of the sublimation of Iridium", 
+#                col="blue", prob = TRUE)
+#lines(density(iridium),lwd = 4, col = "red")
+```
+
+```{r,echo=FALSE}
+#rho_hist = hist(rhodium, xlab = "Temperature", 
+#                main = "Histogram for The heat of the sublimation of Rhodium",
+#                col="blue",prob = TRUE)
+#lines(density(rhodium),lwd = 4, col = "red")
+```
+
+- Make a stem-and-leaf plot
+
+```{r}
+message("The stem-and-leaf plot of Iridium ")
+iri_stem = stem(iridium, scale = 5)
+message("The stem-and-leaf plot of Rhodium ")
+rho_stem = stem(rhodium, scale = 1)
+```
+
+- Make a boxplot:
+
+```{r}
+iri_boxplot = boxplot(iridium, xlab = "Temperature",
+                      border = "red",
+                      main = "Boxplot for Iridium",
+                      horizontal = TRUE)
+rho_boxplot = boxplot(rhodium, xlab = "Temperature",
+                      border = "red",
+                      main = "Boxplot for Rhodium",
+                      horizontal = TRUE)
+```
+
+b) Find the mean, 10% and 20% trimmed means, and median and compare them.
+
+- The mean:
+$$\bar{X}=\frac{1}{n}\sum_{i=1}^{n}X_i$$
+
+```{r}
+iri_mean = mean(iridium)
+rho_mean = mean(rhodium)
+cat("The mean of Iridium is ",iri_mean,"\n","The mean of Rhodium is ",rho_mean)
+```
+
+- The 10% and 20% trimmed means: $\alpha=$ 0.1 and 0.2
+
+$$\bar{X_\alpha}=\frac{X_{([n\alpha]+1)}+\cdots+X_{(n-[n\alpha])}}{n-2[n\alpha]}$$
+
+```{r}
+iri_trim_10 = mean(iridium, trim = 0.1)
+iri_trim_20 = mean(iridium, trim = 0.2)
+rho_trim_10 = mean(rhodium, trim = 0.1)
+rho_trim_20 = mean(rhodium, trim = 0.2)
+cat("10% and 20% trimed mean of Iridium are ",iri_trim_10, " and ",iri_trim_20,"\n",
+    "10% and 20% trimed mean of Rhodium are ",rho_trim_10, " and ",rho_trim_20)
+```
+
+- The median: we take the number of the middle order in n samples (n=odd) or the average of the number of 2 middle orders in n samples (n=even).
+
+```{r}
+iri_median = median(iridium)
+rho_median = median(rhodium)
+cat("The median of Iridium is ",iri_median,"\n","The median of Rhodium is ",rho_median)
+```
+
+==> We see the mean, 10% and 20% trimmed mean, and median of Iridium and Rhodium have the approximately results together. If we try the 50% trimmed mean, it will be equal with the median.
+
+c) Find the standard error of the sample mean and a corresponding approximate 90% confidence interval.
+
+- The standard error of the sample mean:
+
+$$s=\sqrt{\frac{\sum_{i=1}^{n}(X_i-\bar{X})^2}{n-1}}$$
+$$s_{\bar{X}}=\frac{s}{\sqrt{n}}$$
+
+
+```{r}
+iri_std_err = sd(iridium)/sqrt(length(iridium))
+rho_std_err = sd(rhodium)/sqrt(length(rhodium))
+cat("The standard error of Iridium is ",iri_std_err,"\n", 
+    "The standard error of Rhodium is ",rho_std_err)
+```
+
+- The corresponding approximate 90% confidence interval:
+
+$$P\left(-z(\alpha/2) \le \frac{\bar{X}-\mu}{s_{\bar{X}}} \le z(\alpha/2)\right) \approx 1-\alpha$$
+
+$$P\left(\bar{X}-z(\alpha/2)s_{\bar{X}} \le \mu \le \bar{X}+z(\alpha/2)s_{\bar{X}}\right) \approx 1-\alpha$$
+```{r}
+confident_inte = 0.9
+norm_z = (1 + confident_inte)/2
+z_alpha.5 = qnorm(norm_z)
+
+iri_lower_bound = iri_mean - z_alpha.5 * iri_std_err
+iri_upper_bound = iri_mean + z_alpha.5 * iri_std_err
+cat("The 90% confidence interval of Iridium is ",iri_lower_bound," and ", iri_upper_bound)
+
+rho_lower_bound = rho_mean - z_alpha.5 * rho_std_err
+rho_upper_bound = rho_mean + z_alpha.5 * rho_std_err
+cat("The 90% confidence interval of Rhodium is ",rho_lower_bound," and ", rho_upper_bound)
+```
+
+## Question 6:
+- The density function of X(k) is :
+$$f_k(x)=\frac{n!}{(k-1)!(n-k)!}[F(x)]^{k-1}[1-F(x)]^{n-k}f(x)$$
+- Considering $X_{(k)}$ from a uniform distribution on [0,1]. Let $X_{(k)}=x$, and having k-1 in (0,$x$) and n-k in ($x$,1). Then the density of X(k) is given by:
+
+\begin{equation}
+  f_{k}(x) =
+    \begin{cases}
+      \frac{n!}{(k-1)!(n-k)!}x^{k-1}(1-x)^{n-k} & \text{if 0 < $x$ < 1}\\
+      0 & \text{otherwise}
+    \end{cases}       
+\end{equation}
+
+Thus,
+$$E(X_{(k)})=\frac{n!}{(k-1)!(n-k)!}\int_{0}^{1} x^k(1-x)^{n-k} \; dx$$
+- Let $a-1=k$ and $b-1=n-k$, the integral becomes the beta function:
+$$\int_{0}^{1} x^{a-1}(1-x)^{b-1} \;dx = \frac{\Gamma(a)\Gamma(b)}{\Gamma(a+b)}=\frac{(a-1)!(b-1)!}{(a+b-1)!}$$
+Thus,
+
+$$E(X_{(k)})=\frac{n!}{(k-1)!(n-k)!}\frac{k!(n-k)!}{(n+1)!}=\frac{k}{n+1}$$
+Similarly,
+
+$$E(X_{(k)}^2)=\frac{n!}{(k-1)!(n-k)!}\int_{0}^{1} x^{k+1}(1-x)^{n-k}= \frac{k(k+1)}{(n+2)(n+1)}$$
+- The variance is:
+$$Var(X_{(k)})=E(X_{(k)}^2)-(E(X_{(k)}))^2=\frac{1}{n+2}\left(\frac{k}{n+1}\right)\left(1-\frac{k}{n+1}\right)$$
+
+## Question 4:
+
+a) Sketch the approximate standard deviation of the empirical log survival function, $log S_n(t)$, as a function of t.
+- We have: sample from an exponential distribution with parameter $\lambda = 1$, so:
+ 
+$$
+Var(log[S_n(t)]) = Var(log[1 - F_n(t)]) \approx \frac{Var[1 - F_n(t)]}{[1 - F(t)]^2}
+$$ 
+ 
+$$
+= \frac{Var(1) + Var(-F_n(t))}{[1 - F(t)]^2} = \frac{0 + Var(F_n(t))}{[1 - F(t)]^2} = \frac{1}{n}\left(\frac{F(t)[1 - F(t)]}{[1 - F(t)]^2}\right)
+= \frac{1}{n}\left(\frac{F(t)}{1 - F(t)}\right)
+$$ 
+
+                  => 
+$$ Function = \sqrt{Var(log[S_n(t)])} = \sqrt{\frac{1}{100}\left(\frac{F(t)}{1 - F(t)}\right)}= \sqrt{\frac{1-e^{-t}}{100*e^{-t}}}=\frac{\sqrt{e^t-1}}{10}$$
+
+```{r}
+ft_sd = function(t){sqrt((exp(t)-1))/10}
+curve(ft_sd, from=0., to=10, xlab="t", ylab="Function of t")
+```
+
+- Generate several such samples of size 100 on a computer and for each sample
+plot the empirical log survival function
+
+
+
+- Create 3 samples of size 100 from an exponential distribution with parameter $\lambda = 1$.
+
+```{r}
+
+sample_exp_1 = rexp(100, 1)
+time_1 = sample_exp_1[order(sample_exp_1 , decreasing = F)]
+sample_exp_2 = rexp(100,1)
+time_2 = sample_exp_2[order(sample_exp_2 , decreasing = F)]
+sample_exp_3 = rexp(100,1)
+time_3 = sample_exp_3[order(sample_exp_3 , decreasing = F)]
+lamda = 1
+
+log_sur_exp_1=log(1 - exp(-lamda*time_1))
+log_sur_exp_2=log(1 - exp(-lamda*time_2))
+log_sur_exp_3=log(1 - exp(-lamda*time_3))
+
+std_survival = function(t){sqrt((exp(t)-1))/10}
+std_1=std_survival(time_1)
+std_2=std_survival(time_2)
+std_3=std_survival(time_3)
+
+plot(time_1,log_sur_exp_1, xlab = "time", ylab = "log S(t)", 
+     main = "Plot the empirical log survival function",type='l', col = "green")
+lines(time_2,log_sur_exp_2,type='l', col = "red")
+lines(time_3,log_sur_exp_3,type='l', col = "blue")
+legend('bottomright',inset=0.05,c("Sample 1","Sample 2","Sample 3"), lty=1, 
+       col=c("green","red","blue"))
+
+plot(time_1,std_1, xlab = "time", ylab = "the standard deviation of log S(t)", 
+     main = "Plot the approximate standard deviation\n of the empirical log survival function",
+     type='l',  col = "green")
+lines(time_2,std_2,type='l', col = "red")
+lines(time_3,std_3,type='l', col = "blue")
+legend('topleft',inset=0.05,c("Sample 1","Sample 2","Sample 3"), lty=1, 
+       col=c("green","red","blue"))
+```
+
+- We see that the empirical log survival function is a curve and there is no difference among 3 samples, while the approximate standard deviation of the empirical log survival function shows various curves and there is a significant difference at the end of the curve. In addition, the absolute of the empirical log survival function is also equal with the cumulative hazard (in the 3th question). So, in an exponential distribution, the hazard function is a constant and the cumulative hazard is just a linear function of time.
+==> In an exponential distribution, the empirical log survival function is extremely unreliable, it will be better if we use plot the approximate standard deviation of the empirical log survival function.
+
+```{r,echo=FALSE}
+H_t = -pexp(time_1, rate = 1, lower.tail = FALSE, log = TRUE)
+#plot(time_1,H_t,type="l",col="green", 
+     #main="Plot the cumulative hazard function for Sample 1")
+```
