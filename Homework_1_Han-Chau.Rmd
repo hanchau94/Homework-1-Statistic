@@ -298,7 +298,7 @@ plot the empirical log survival function
 
 
 
-- Create 3 samples of size 100 from an exponential distribution with parameter $\lambda = 1$.
+- Create samples of size 100 from an exponential distribution with parameter $\lambda = 1$.
 
 ```{r}
 
@@ -342,4 +342,37 @@ legend('topleft',inset=0.05,c("Sample 1","Sample 2","Sample 3"), lty=1,
 H_t = -pexp(time_1, rate = 1, lower.tail = FALSE, log = TRUE)
 #plot(time_1,H_t,type="l",col="green", 
      #main="Plot the cumulative hazard function for Sample 1")
+```
+```{r}
+set.seed(10)
+x<-sample(1:400, 100, replace=F)
+time_1 = x[order(x , decreasing = F)]
+x_1<-sample(0:50, 100, replace=T)
+sample_1 = x_1[order(x_1 , decreasing = T)]
+y<-sample(1:300, 100, replace=F)
+time_2 = y[order(y , decreasing = F)]
+y_1<-sample(0:50, 100, replace=T)
+sample_2 = y_1[order(y_1 , decreasing = T)]
+
+var_sur <- function(a,b) {
+  var_log_sur = 1/length(a)*((b/length(b))/(1-(b/length(b))))
+  #print(var_log_sur)
+}
+
+surv_1 = 1 - sample_1/length(sample_1)
+log_1 = -log(surv_1)
+surv_2 = 1 - sample_2/length(sample_2)
+log_2 = -log(surv_2)
+plot_var_1 = var_sur(time_1,sample_1)
+plot_var_2 = var_sur(time_2,sample_2)
+
+plot(time_1,log_1, xlab = "time", ylab = "the propotion of survival ", main = "Plot the empirical log survival function",type='l', col = "green")
+lines(time_2,log_2,type='l', col = "red")
+legend('topright',inset=0.05,c("Sample 1","Sample 2"), lty=1, col=c("green","red"))
+```
+
+```{r}
+plot(time_1,plot_var_1, xlab = "time", ylab = "Var[log S_n(t)]", main = "Plot the approximate standard deviation\n of the empirical log survival function",type='l', col = "green")
+lines(time_2,plot_var_2,type='l', col = "red")
+legend('topright',inset=0.05,c("Sample 1","Sample 2"), lty=1, col=c("green","red"))
 ```
